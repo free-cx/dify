@@ -38,6 +38,15 @@ const translation = {
     duplicate: '复制',
     rename: '重命名',
     audioSourceUnavailable: '音源不可用',
+    copyImage: '复制图片',
+    zoomOut: '缩小',
+    zoomIn: '放大',
+    openInNewTab: '在新标签页打开',
+    saveAndRegenerate: '保存并重新生成子分段',
+    close: '关闭',
+    view: '查看',
+    viewMore: '查看更多',
+    regenerate: '重新生成',
   },
   errorMsg: {
     fieldRequired: '{{field}} 为必填项',
@@ -140,7 +149,7 @@ const translation = {
     logout: '登出',
   },
   settings: {
-    accountGroup: '账户',
+    accountGroup: '通用',
     workplaceGroup: '工作空间',
     account: '我的账户',
     members: '成员',
@@ -153,6 +162,9 @@ const translation = {
     apiBasedExtension: 'API 扩展',
   },
   account: {
+    account: '账户',
+    myAccount: '我的账户',
+    studio: 'Dify 工作室',
     avatar: '头像',
     name: '用户名',
     email: '邮箱',
@@ -190,6 +202,7 @@ const translation = {
     datasetOperatorTip: '只能管理知识库',
     inviteTeamMember: '添加团队成员',
     inviteTeamMemberTip: '对方在登录后可以访问你的团队数据。',
+    emailNotSetup: '由于邮件服务器未设置，无法发送邀请邮件。请将邀请后生成的邀请链接通知用户。',
     email: '邮箱',
     emailInvalid: '邮箱格式无效',
     emailPlaceholder: '输入邮箱',
@@ -370,7 +383,7 @@ const translation = {
     addConfig: '增加配置',
     editConfig: '修改配置',
     loadBalancingLeastKeyWarning: '至少启用 2 个 Key 以使用负载均衡',
-    loadBalancingInfo: '默认情况下，负载平衡使用 Round-robin 策略。如果触发速率限制，将应用 1 分钟的冷却时间',
+    loadBalancingInfo: '默认情况下，负载均衡使用 Round-robin 策略。如果触发速率限制，将应用 1 分钟的冷却时间',
     upgradeForLoadBalancing: '升级以解锁负载均衡功能',
     apiKey: 'API 密钥',
   },
@@ -467,9 +480,10 @@ const translation = {
     documents: '文档',
     hitTesting: '召回测试',
     settings: '设置',
-    emptyTip: ' 知识库尚未关联，请前往应用程序或插件完成关联。',
+    emptyTip: '此知识尚未集成到任何应用程序中。请参阅文档以获取指导。',
     viewDoc: '查看文档',
     relatedApp: '个关联应用',
+    noRelatedApp: '无关联应用',
   },
   voiceInput: {
     speaking: '现在讲...',
@@ -500,6 +514,7 @@ const translation = {
       vectorHash: '向量哈希：',
       hitScore: '召回得分：',
     },
+    inputPlaceholder: '和机器人聊天',
   },
   promptEditor: {
     placeholder: '在这里写你的提示词，输入\'{\' 插入变量、输入\'/\' 插入提示内容块',
@@ -558,6 +573,16 @@ const translation = {
     pasteImageLinkInvalid: '图片链接无效',
     imageUpload: '图片上传',
   },
+  fileUploader: {
+    uploadFromComputer: '从本地上传',
+    pasteFileLink: '粘贴文件链接',
+    pasteFileLinkInputPlaceholder: '输入文件链接',
+    uploadFromComputerReadError: '文件读取失败，请重新选择。',
+    uploadFromComputerUploadError: '文件上传失败，请重新上传。',
+    uploadFromComputerLimit: '上传 {{type}} 不能超过 {{size}}',
+    pasteFileLinkInvalid: '文件链接无效',
+    fileExtensionNotSupport: '文件类型不支持',
+  },
   tag: {
     placeholder: '全部标签',
     addNew: '创建新标签',
@@ -572,6 +597,13 @@ const translation = {
     deleteTip: '标签正在使用中，是否删除？',
     created: '标签创建成功',
     failed: '标签创建失败',
+  },
+  license: {
+    expiring: '许可证还有 1 天到期',
+    expiring_plural: '许可证还有 {{count}} 天到期',
+  },
+  pagination: {
+    perPage: '每页显示',
   },
 }
 

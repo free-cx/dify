@@ -7,7 +7,7 @@ from urllib.parse import urljoin
 import numpy as np
 import requests
 
-from core.embedding.embedding_constant import EmbeddingInputType
+from core.entities.embedding_type import EmbeddingInputType
 from core.model_runtime.entities.common_entities import I18nObject
 from core.model_runtime.entities.model_entities import (
     AIModelEntity,
@@ -43,6 +43,7 @@ class OAICompatEmbeddingModel(_CommonOaiApiCompat, TextEmbeddingModel):
         :param credentials: model credentials
         :param texts: texts to embed
         :param user: unique user id
+        :param input_type: input type
         :return: embeddings result
         """
 
@@ -54,6 +55,7 @@ class OAICompatEmbeddingModel(_CommonOaiApiCompat, TextEmbeddingModel):
             headers["Authorization"] = f"Bearer {api_key}"
 
         endpoint_url = credentials.get("endpoint_url")
+        assert endpoint_url is not None, "endpoint_url is required in credentials"
         if not endpoint_url.endswith("/"):
             endpoint_url += "/"
 
@@ -138,13 +140,17 @@ class OAICompatEmbeddingModel(_CommonOaiApiCompat, TextEmbeddingModel):
             if api_key:
                 headers["Authorization"] = f"Bearer {api_key}"
 
-            endpoint_url = credentials.get("endpoint_url")
+            endpoint_url = credentials.get("endpoint_url", "")
             if not endpoint_url.endswith("/"):
                 endpoint_url += "/"
 
             endpoint_url = urljoin(endpoint_url, "embeddings")
 
             payload = {"input": "ping", "model": model}
+            # For nvidia models, the "input_type":"query" need in the payload
+            # more to check issue #11193 or NvidiaTextEmbeddingModel
+            if model.startswith("nvidia/"):
+                payload["input_type"] = "query"
 
             response = requests.post(url=endpoint_url, headers=headers, data=json.dumps(payload), timeout=(10, 300))
 
@@ -175,7 +181,7 @@ class OAICompatEmbeddingModel(_CommonOaiApiCompat, TextEmbeddingModel):
             model_type=ModelType.TEXT_EMBEDDING,
             fetch_from=FetchFrom.CUSTOMIZABLE_MODEL,
             model_properties={
-                ModelPropertyKey.CONTEXT_SIZE: int(credentials.get("context_size")),
+                ModelPropertyKey.CONTEXT_SIZE: int(credentials.get("context_size", 512)),
                 ModelPropertyKey.MAX_CHUNKS: 1,
             },
             parameter_rules=[],

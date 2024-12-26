@@ -38,6 +38,10 @@ const translation = {
     duplicate: 'Duplicada',
     rename: 'Renomear',
     audioSourceUnavailable: 'AudioSource não está disponível',
+    zoomOut: 'Diminuir o zoom',
+    zoomIn: 'Ampliar',
+    copyImage: 'Copiar imagem',
+    openInNewTab: 'Abrir em nova guia',
   },
   placeholder: {
     input: 'Por favor, insira',
@@ -167,6 +171,9 @@ const translation = {
     delete: 'Excluir conta',
     deleteTip: 'Excluir sua conta apagará permanentemente todos os seus dados e eles não poderão ser recuperados.',
     deleteConfirmTip: 'Para confirmar, envie o seguinte do seu e-mail registrado para ',
+    myAccount: 'Minha Conta',
+    account: 'Conta',
+    studio: 'Estúdio Dify',
   },
   members: {
     team: 'Equipe',
@@ -184,6 +191,7 @@ const translation = {
     editorTip: 'Pode editar aplicativos, mas não pode gerenciar configurações da equipe',
     inviteTeamMember: 'Adicionar membro da equipe',
     inviteTeamMemberTip: 'Eles podem acessar os dados da sua equipe diretamente após fazer login.',
+    emailNotSetup: 'O servidor de e-mail não está configurado, então os e-mails de convite não podem ser enviados. Por favor, notifique os usuários sobre o link de convite que será emitido após o convite.',
     email: 'E-mail',
     emailInvalid: 'Formato de e-mail inválido',
     emailPlaceholder: 'Por favor, insira e-mails',
@@ -496,6 +504,7 @@ const translation = {
       vectorHash: 'Hash de vetor:',
       hitScore: 'Pontuação de recuperação:',
     },
+    inputPlaceholder: 'Fale com o bot',
   },
   promptEditor: {
     placeholder: 'Escreva sua palavra de incentivo aqui, digite \'{\' para inserir uma variável, digite \'/\' para inserir um bloco de conteúdo de incentivo',
@@ -572,6 +581,23 @@ const translation = {
   errorMsg: {
     fieldRequired: '{{field}} é obrigatório',
     urlError: 'URL deve começar com http:// ou https://',
+  },
+  fileUploader: {
+    uploadFromComputer: 'Upload local',
+    pasteFileLink: 'Colar link do arquivo',
+    pasteFileLinkInputPlaceholder: 'Digite o URL...',
+    pasteFileLinkInvalid: 'Link de arquivo inválido',
+    fileExtensionNotSupport: 'Extensão de arquivo não suportada',
+    uploadFromComputerReadError: 'Falha na leitura do arquivo, tente novamente.',
+    uploadFromComputerLimit: 'Carregar arquivo não pode exceder {{size}}',
+    uploadFromComputerUploadError: 'Falha no upload do arquivo, faça o upload novamente.',
+  },
+  license: {
+    expiring: 'Expirando em um dia',
+    expiring_plural: 'Expirando em {{count}} dias',
+  },
+  pagination: {
+    perPage: 'Itens por página',
   },
 }
 

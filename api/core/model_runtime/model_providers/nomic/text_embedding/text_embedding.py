@@ -2,10 +2,10 @@ import time
 from functools import wraps
 from typing import Optional
 
-from nomic import embed
-from nomic import login as nomic_login
+from nomic import embed  # type: ignore
+from nomic import login as nomic_login  # type: ignore
 
-from core.embedding.embedding_constant import EmbeddingInputType
+from core.entities.embedding_type import EmbeddingInputType
 from core.model_runtime.entities.model_entities import PriceType
 from core.model_runtime.entities.text_embedding_entities import (
     EmbeddingUsage,
@@ -56,6 +56,7 @@ class NomicTextEmbeddingModel(_CommonNomic, TextEmbeddingModel):
         :param credentials: model credentials
         :param texts: texts to embed
         :param user: unique user id
+        :param input_type: input type
         :return: embeddings result
         """
         embeddings, prompt_tokens, total_tokens = self.embed_text(

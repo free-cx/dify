@@ -37,6 +37,7 @@ const translation = {
     notionSyncTitle: 'Notion 未繫結',
     notionSyncTip: '同步 Notion 內容前，須先繫結 Notion 空間',
     connect: '去繫結',
+    cancel: '取消',
     button: '下一步',
     emptyDatasetCreation: '建立一個空知識庫',
     modal: {
@@ -73,6 +74,14 @@ const translation = {
       unknownError: '未知錯誤',
       fireCrawlNotConfigured: '未配置 Firecrawl',
       maxDepthTooltip: '相對於輸入的 URL 的最大爬網深度。深度 0 只是抓取輸入的 url 的頁面，深度 1 抓取 url 以及 enteredURL + 1 / 之後的所有內容，依此類推。',
+      jinaReaderNotConfigured: '未配置 Jina Reader',
+      jinaReaderNotConfiguredDescription: '通過輸入您的免費 API 金鑰進行訪問來設置 Jina Reader。',
+      chooseProvider: '選擇供應商',
+      jinaReaderDoc: '了解有關 Jina Reader 的更多資訊',
+      jinaReaderTitle: '將整個網站轉換為 Markdown',
+      useSitemap: '使用網站地圖',
+      jinaReaderDocLink: 'https://jina.ai/reader',
+      useSitemapTooltip: '按照網站地圖對網站進行爬網。否則，Jina Reader 將根據頁面相關性反覆運算抓取，從而生成更少但品質更高的頁面。',
     },
   },
   stepTwo: {
@@ -91,7 +100,7 @@ const translation = {
     removeExtraSpaces: '替換掉連續的空格、換行符和製表符',
     removeUrlEmails: '刪除所有 URL 和電子郵件地址',
     removeStopwords: '去除停用詞，例如 “a”，“an”，“the” 等',
-    preview: '確認並預覽',
+    preview: '預覽',
     reset: '重置',
     indexMode: '索引方式',
     qualified: '高質量',
@@ -134,6 +143,7 @@ const translation = {
     websiteSource: '預處理網站',
     webpageUnit: '頁面',
     separatorTip: '分隔符是用於分隔文字的字元。\\n\\n 和 \\n 是分隔段落和行的常用分隔符。與逗號 （\\n\\n，\\n） 組合使用時，當超過最大區塊長度時，段落將按行分段。您也可以使用自定義的特殊分隔符（例如 ***）。',
+    maxLengthCheck: '塊最大長度應小於 {{limit}}',
   },
   stepThree: {
     creationTitle: '🎉 知識庫已建立',
@@ -156,6 +166,11 @@ const translation = {
     configFirecrawl: '配置 🔥Firecrawl',
     apiKeyPlaceholder: '來自 firecrawl.dev 的 API 金鑰',
     getApiKeyLinkText: '從 firecrawl.dev 獲取 API 金鑰',
+  },
+  jinaReader: {
+    configJinaReader: '配置 Jina Reader',
+    getApiKeyLinkText: '在 jina.ai 獲取您的免費 API 金鑰',
+    apiKeyPlaceholder: '來自 jina.ai 的 API 金鑰',
   },
 }
 

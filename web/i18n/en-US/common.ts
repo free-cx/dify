@@ -38,6 +38,15 @@ const translation = {
     duplicate: 'Duplicate',
     rename: 'Rename',
     audioSourceUnavailable: 'AudioSource is unavailable',
+    copyImage: 'Copy Image',
+    zoomOut: 'Zoom Out',
+    zoomIn: 'Zoom In',
+    openInNewTab: 'Open in new tab',
+    saveAndRegenerate: 'Save & Regenerate Child Chunks',
+    close: 'Close',
+    view: 'View',
+    viewMore: 'VIEW MORE',
+    regenerate: 'Regenerate',
   },
   errorMsg: {
     fieldRequired: '{{field}} is required',
@@ -140,7 +149,7 @@ const translation = {
     logout: 'Log out',
   },
   settings: {
-    accountGroup: 'ACCOUNT',
+    accountGroup: 'GENERAL',
     workplaceGroup: 'WORKSPACE',
     account: 'My account',
     members: 'Members',
@@ -153,6 +162,9 @@ const translation = {
     apiBasedExtension: 'API Extension',
   },
   account: {
+    account: 'Account',
+    myAccount: 'My Account',
+    studio: 'Dify Studio',
     avatar: 'Avatar',
     name: 'Name',
     email: 'Email',
@@ -192,6 +204,7 @@ const translation = {
     datasetOperatorTip: 'Only can manage the knowledge base',
     inviteTeamMember: 'Add team member',
     inviteTeamMemberTip: 'They can access your team data directly after signing in.',
+    emailNotSetup: 'Email server is not set up, so invitation emails cannot be sent. Please notify users of the invitation link that will be issued after invitation instead.',
     email: 'Email',
     emailInvalid: 'Invalid Email Format',
     emailPlaceholder: 'Please input emails',
@@ -356,7 +369,7 @@ const translation = {
     deprecated: 'Deprecated',
     confirmDelete: 'Confirm deletion?',
     quotaTip: 'Remaining available free tokens',
-    loadPresets: 'Load Presents',
+    loadPresets: 'Load Presets',
     parameters: 'PARAMETERS',
     loadBalancing: 'Load balancing',
     loadBalancingDescription: 'Reduce pressure with multiple sets of credentials.',
@@ -467,9 +480,10 @@ const translation = {
     documents: 'Documents',
     hitTesting: 'Retrieval Testing',
     settings: 'Settings',
-    emptyTip: 'The Knowledge has not been associated, please go to the application or plug-in to complete the association.',
+    emptyTip: 'This Knowledge has not been integrated within any application. Please refer to the document for guidance.',
     viewDoc: 'View documentation',
     relatedApp: 'linked apps',
+    noRelatedApp: 'No linked apps',
   },
   voiceInput: {
     speaking: 'Speak now...',
@@ -500,6 +514,7 @@ const translation = {
       vectorHash: 'Vector hash:',
       hitScore: 'Retrieval Score:',
     },
+    inputPlaceholder: 'Talk to Bot',
   },
   promptEditor: {
     placeholder: 'Write your prompt word here, enter \'{\' to insert a variable, enter \'/\' to insert a prompt content block',
@@ -558,6 +573,16 @@ const translation = {
     pasteImageLinkInvalid: 'Invalid image link',
     imageUpload: 'Image Upload',
   },
+  fileUploader: {
+    uploadFromComputer: 'Local upload',
+    pasteFileLink: 'Paste file link',
+    pasteFileLinkInputPlaceholder: 'Enter URL...',
+    uploadFromComputerReadError: 'File reading failed, please try again.',
+    uploadFromComputerUploadError: 'File upload failed, please upload again.',
+    uploadFromComputerLimit: 'Upload {{type}} cannot exceed {{size}}',
+    pasteFileLinkInvalid: 'Invalid file link',
+    fileExtensionNotSupport: 'File extension not supported',
+  },
   tag: {
     placeholder: 'All Tags',
     addNew: 'Add new tag',
@@ -572,6 +597,13 @@ const translation = {
     deleteTip: 'The tag is being used, delete it?',
     created: 'Tag created successfully',
     failed: 'Tag creation failed',
+  },
+  license: {
+    expiring: 'Expiring in one day',
+    expiring_plural: 'Expiring in {{count}} days',
+  },
+  pagination: {
+    perPage: 'Items per page',
   },
 }
 

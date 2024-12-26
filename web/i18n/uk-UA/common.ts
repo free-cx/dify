@@ -38,6 +38,10 @@ const translation = {
     duplicate: 'дублікат',
     rename: 'Перейменувати',
     audioSourceUnavailable: 'AudioSource недоступний',
+    copyImage: 'Скопіювати зображення',
+    openInNewTab: 'Відкрити в новій вкладці',
+    zoomOut: 'Зменшити масштаб',
+    zoomIn: 'Збільшити масштаб',
   },
   placeholder: {
     input: 'Будь ласка, введіть текст',
@@ -167,6 +171,9 @@ const translation = {
     delete: 'Видалити обліковий запис',
     deleteTip: 'Видалення вашого облікового запису призведе до остаточного видалення всіх ваших даних, і їх неможливо буде відновити.',
     deleteConfirmTip: 'Щоб підтвердити, будь ласка, надішліть наступне з вашої зареєстрованої електронної пошти на ',
+    account: 'Рахунок',
+    studio: 'Студія Dify',
+    myAccount: 'Особистий кабінет',
   },
   members: {
     team: 'Команда',
@@ -184,6 +191,7 @@ const translation = {
     editorTip: 'Може створювати програми, але не може керувати налаштуваннями команди',
     inviteTeamMember: 'Додати учасника команди',
     inviteTeamMemberTip: 'Вони зможуть отримати доступ до даних вашої команди безпосередньо після входу.',
+    emailNotSetup: 'Поштовий сервер не налаштований, тому запрошення електронною поштою не можуть бути надіслані. Будь ласка, повідомте користувачів про посилання для запрошення, яке буде видано після запрошення.',
     email: 'Електронна пошта',
     emailInvalid: 'Недійсний формат електронної пошти',
     emailPlaceholder: 'Будь ласка, введіть адресу електронної пошти',
@@ -497,6 +505,7 @@ const translation = {
       vectorHash: 'Хеш вектора:',
       hitScore: 'Оцінка звернення:',
     },
+    inputPlaceholder: 'Поговоріть з ботом',
   },
   promptEditor: {
     placeholder: 'Пишіть свої підказки тут, вводьте \'{\', щоб вставити змінну чи \'/\', щоб вставити блок-підказку',
@@ -573,6 +582,23 @@ const translation = {
   errorMsg: {
     fieldRequired: '{{field}} є обов\'язковим',
     urlError: 'URL-адреса повинна починатися з http:// або https://',
+  },
+  fileUploader: {
+    pasteFileLink: 'Вставити посилання на файл',
+    pasteFileLinkInvalid: 'Неприпустиме посилання на файл',
+    uploadFromComputer: 'Локальне завантаження',
+    uploadFromComputerLimit: 'Файл завантаження не може перевищувати {{size}}',
+    pasteFileLinkInputPlaceholder: 'Введіть URL-адресу...',
+    fileExtensionNotSupport: 'Розширення файлу не підтримується',
+    uploadFromComputerReadError: 'Не вдалося прочитати файл, будь ласка, спробуйте ще раз.',
+    uploadFromComputerUploadError: 'Не вдалося завантажити файл, будь ласка, завантажте ще раз.',
+  },
+  license: {
+    expiring: 'Термін дії закінчується за один день',
+    expiring_plural: 'Термін дії закінчується за {{count}} днів',
+  },
+  pagination: {
+    perPage: 'Елементів на сторінці',
   },
 }
 
