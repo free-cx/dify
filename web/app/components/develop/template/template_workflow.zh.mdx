@@ -41,18 +41,8 @@ Workflow 应用无会话支持，适合用于翻译/文章写作/总结 AI 等�
     ### Request Body
       - `inputs` (object) Required
         允许传入 App 定义的各变量值。
-        inputs 参数包含了多组键值对（Key/Value pairs），每组的键对应一个特定变量，每组的值则是该变量的具体值。
-        如果变量是文件类型，请指定一个包含以下 `files` 中所述键的对象。
-      - `response_mode` (string) Required
-        返回响应模式，支持：
-        - `streaming` 流式模式（推荐）。基于 SSE（**[Server-Sent Events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events)**）实现类似打字机输出方式的流式返回。
-        - `blocking` 阻塞模式，等待执行完毕后返回结果。（请求若流程较长可能会被中断）。
-        <i>由于 Cloudflare 限制，请求会在 100 秒超时无返回后中断。</i>
-      - `user` (string) Required
-        用户标识，用于定义终端用户的身份，方便检索、统计。
-        由开发者定义规则，需保证用户标识在应用内唯一。
-      - `files` (array[object]) Optional
-          文件列表，适用于传入文件结合文本理解并回答问题，仅当模型支持该类型文件解析能力时可用。
+        inputs 参数包含了多组键值对（Key/Value pairs），每组的键对应一个特定变量，每组的值则是该变量的具体值。变量可以是文件列表类型。
+        文件列表类型变量适用于传入文件结合文本理解并回答问题，仅当模型支持该类型文件解析能力时可用。如果该变量是文件列表类型，该变量对应的值应是列表格式，其中每个元素应包含以下内容：
           - `type` (string) 支持类型：
             - `document` 具体类型包含：'TXT', 'MD', 'MARKDOWN', 'PDF', 'HTML', 'XLSX', 'XLS', 'DOCX', 'CSV', 'EML', 'MSG', 'PPTX', 'PPT', 'XML', 'EPUB'
             - `image` 具体类型包含：'JPG', 'JPEG', 'PNG', 'GIF', 'WEBP', 'SVG'
@@ -61,7 +51,16 @@ Workflow 应用无会话支持，适合用于翻译/文章写作/总结 AI 等�
             - `custom` 具体类型包含：其他文件类型
           - `transfer_method` (string) 传递方式，`remote_url` 图片地址 / `local_file` 上传文件
           - `url` (string) 图片地址（仅当传递方式为 `remote_url` 时）
-          - `upload_file_id` (string) (string) 上传文件 ID（仅当传递方式为 `local_file` 时）
+          - `upload_file_id` (string)  上传文件 ID（仅当传递方式为 `local_file` 时）
+      - `response_mode` (string) Required
+        返回响应模式，支持：
+        - `streaming` 流式模式（推荐）。基于 SSE（**[Server-Sent Events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events)**）实现类似打字机输出方式的流式返回。
+        - `blocking` 阻塞模式，等待执行完毕后返回结果。（请求若流程较长可能会被中断）。
+        <i>由于 Cloudflare 限制，请求会在 100 秒超时无返回后中断。</i>
+      - `user` (string) Required
+        用户标识，用于定义终端用户的身份，方便检索、统计。
+        由开发者定义规则，需保证用户标识在应用内唯一。
+
 
     ### Response
     当 `response_mode` 为 `blocking` 时，返回 CompletionResponse object。
@@ -184,15 +183,18 @@ Workflow 应用无会话支持，适合用于翻译/文章写作/总结 AI 等�
     }'
     ```
     </CodeGroup>
-    <CodeGroup title="File variable example">
+    <CodeGroup title="Example: file array as an input variable">
       ```json {{ title: 'File variable example' }}
       {
         "inputs": {
-          "{variable_name}": {
+          "{variable_name}": 
+          [
+            {
             "transfer_method": "local_file",
             "upload_file_id": "{upload_file_id}",
             "type": "{document_type}"
-          }
+            }
+          ]
         }
       }
       ```
@@ -273,11 +275,11 @@ Workflow 应用无会话支持，适合用于翻译/文章写作/总结 AI 等�
 
           data = {
               "inputs": {
-                  "orig_mail": {
+                  "orig_mail": [{
                       "transfer_method": "local_file",
                       "upload_file_id": file_id,
                       "type": "document"
-                  }
+                  }]
               },
               "response_mode": response_mode,
               "user": user
@@ -316,7 +318,7 @@ Workflow 应用无会话支持，适合用于翻译/文章写作/总结 AI 等�
 ---
 
 <Heading
-  url='/workflows/run/:workflow_id'
+  url='/workflows/run/:workflow_run_id'
   method='GET'
   title='获取workflow执行情况'
   name='#get-workflow-run-detail'
@@ -325,7 +327,7 @@ Workflow 应用无会话支持，适合用于翻译/文章写作/总结 AI 等�
   <Col>
     根据 workflow 执行 ID 获取 workflow 任务当前执行结果
     ### Path
-    - `workflow_id` (string) workflow 执行 ID，可在流式返回 Chunk 中获取
+    - `workflow_run_id` (string) workflow_run_id，可在流式返回 Chunk 中获取
     ### Response
     - `id` (string) workflow 执行 ID
     - `workflow_id` (string) 关联的 Workflow ID
@@ -341,9 +343,9 @@ Workflow 应用无会话支持，适合用于翻译/文章写作/总结 AI 等�
   </Col>
   <Col sticky>
     ### Request Example
-    <CodeGroup title="Request" tag="GET" label="/workflows/run/:workflow_id" targetCode={`curl -X GET '${props.appDetail.api_base_url}/workflows/run/:workflow_id' \\\n-H 'Authorization: Bearer {api_key}' \\\n-H 'Content-Type: application/json'`}>
+    <CodeGroup title="Request" tag="GET" label="/workflows/run/:workflow_run_id" targetCode={`curl -X GET '${props.appDetail.api_base_url}/workflows/run/:workflow_run_id' \\\n-H 'Authorization: Bearer {api_key}' \\\n-H 'Content-Type: application/json'`}>
       ```bash {{ title: 'cURL' }}
-      curl -X GET '${props.appDetail.api_base_url}/workflows/run/:workflow_id' \
+      curl -X GET '${props.appDetail.api_base_url}/workflows/run/:workflow_run_id' \
       -H 'Authorization: Bearer {api_key}' \
       -H 'Content-Type: application/json'
       ```
@@ -361,8 +363,8 @@ Workflow 应用无会话支持，适合用于翻译/文章写作/总结 AI 等�
         "error": null,
         "total_steps": 3,
         "total_tokens": 0,
-        "created_at": "Thu, 18 Jul 2024 03:17:40 -0000",
-        "finished_at": "Thu, 18 Jul 2024 03:18:10 -0000",
+        "created_at": 1705407629,
+        "finished_at": 1727807631,
         "elapsed_time": 30.098514399956912
     }
     ```
@@ -602,22 +604,15 @@ Workflow 应用无会话支持，适合用于翻译/文章写作/总结 AI 等�
 <Row>
   <Col>
   用于获取应用的基本信息
-  ### Query
-    <Properties>
-
-   <Property name='user' type='string' key='user'>
-      用户标识，由开发者定义规则，需保证用户标识在应用内唯一。
-    </Property>
-      </Properties>
   ### Response
   - `name` (string) 应用名称
   - `description` (string) 应用描述
   - `tags` (array[string]) 应用标签
   </Col>
   <Col>
-    <CodeGroup title="Request" tag="GET" label="/info" targetCode={`curl -X GET '${props.appDetail.api_base_url}/info?user=abc-123' \\\n-H 'Authorization: Bearer {api_key}'`}>
+    <CodeGroup title="Request" tag="GET" label="/info" targetCode={`curl -X GET '${props.appDetail.api_base_url}/info' \\\n-H 'Authorization: Bearer {api_key}'`}>
       ```bash {{ title: 'cURL' }}
-      curl -X GET '${props.appDetail.api_base_url}/info?user=abc-123' \
+      curl -X GET '${props.appDetail.api_base_url}/info' \
       -H 'Authorization: Bearer {api_key}'
       ```
     </CodeGroup>
@@ -647,14 +642,6 @@ Workflow 应用无会话支持，适合用于翻译/文章写作/总结 AI 等�
 <Row>
   <Col>
     用于进入页面一开始，获取功能开关、输入参数名称、类型及默认值等使用。
-
-    ### Query
-
-    <Properties>
-      <Property name='user' type='string' key='user'>
-        用户标识，由开发者定义规则，需保证用户标识在应用内唯一。
-      </Property>
-    </Properties>
 
     ### Response
     - `user_input_form` (array[object]) 用户输入表单配置
@@ -689,10 +676,10 @@ Workflow 应用无会话支持，适合用于翻译/文章写作/总结 AI 等�
   </Col>
   <Col sticky>
 
-    <CodeGroup title="Request" tag="GET" label="/parameters" targetCode={` curl -X GET '${props.appDetail.api_base_url}/parameters?user=abc-123'`}>
+    <CodeGroup title="Request" tag="GET" label="/parameters" targetCode={` curl -X GET '${props.appDetail.api_base_url}/parameters'`}>
 
     ```bash {{ title: 'cURL' }}
-    curl -X GET '${props.appDetail.api_base_url}/parameters?user=abc-123' \
+    curl -X GET '${props.appDetail.api_base_url}/parameters' \
     --header 'Authorization: Bearer {api_key}'
     ```
 

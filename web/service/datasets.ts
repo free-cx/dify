@@ -5,7 +5,6 @@ import type {
   CreateDocumentReq,
   DataSet,
   DataSetListResponse,
-  DocumentListResponse,
   ErrorDocsResponse,
   ExternalAPIDeleteResponse,
   ExternalAPIItem,
@@ -13,6 +12,7 @@ import type {
   ExternalAPIUsage,
   ExternalKnowledgeBaseHitTestingResponse,
   ExternalKnowledgeItem,
+  FetchDatasetsParams,
   FileIndexingEstimateResponse,
   HitTestingRecordsResponse,
   HitTestingResponse,
@@ -67,7 +67,7 @@ export const fetchDatasetRelatedApps: Fetcher<RelatedAppResponse, string> = (dat
   return get<RelatedAppResponse>(`/datasets/${datasetId}/related-apps`)
 }
 
-export const fetchDatasets: Fetcher<DataSetListResponse, { url: string; params: { page: number; ids?: string[]; limit?: number } }> = ({ url, params }) => {
+export const fetchDatasets: Fetcher<DataSetListResponse, FetchDatasetsParams> = ({ url, params }) => {
   const urlParams = qs.stringify(params, { indices: false })
   return get<DataSetListResponse>(`${url}?${urlParams}`)
 }
@@ -119,10 +119,6 @@ export const fetchDefaultProcessRule: Fetcher<ProcessRuleResponse, { url: string
 }
 export const fetchProcessRule: Fetcher<ProcessRuleResponse, { params: { documentId: string } }> = ({ params: { documentId } }) => {
   return get<ProcessRuleResponse>('/datasets/process-rule', { params: { document_id: documentId } })
-}
-
-export const fetchDocuments: Fetcher<DocumentListResponse, { datasetId: string; params: { keyword: string; page: number; limit: number; sort?: SortType } }> = ({ datasetId, params }) => {
-  return get<DocumentListResponse>(`/datasets/${datasetId}/documents`, { params })
 }
 
 export const createFirstDocument: Fetcher<createDocumentResponse, { body: CreateDocumentReq }> = ({ body }) => {
@@ -251,6 +247,25 @@ export const checkJinaReaderTaskStatus: Fetcher<CommonResponse, string> = (jobId
   return get<CommonResponse>(`website/crawl/status/${jobId}`, {
     params: {
       provider: 'jinareader',
+    },
+  }, {
+    silent: true,
+  })
+}
+
+export const createWatercrawlTask: Fetcher<CommonResponse, Record<string, any>> = (body) => {
+  return post<CommonResponse>('website/crawl', {
+    body: {
+      ...body,
+      provider: DataSourceProvider.waterCrawl,
+    },
+  })
+}
+
+export const checkWatercrawlTaskStatus: Fetcher<CommonResponse, string> = (jobId: string) => {
+  return get<CommonResponse>(`website/crawl/status/${jobId}`, {
+    params: {
+      provider: DataSourceProvider.waterCrawl,
     },
   }, {
     silent: true,
