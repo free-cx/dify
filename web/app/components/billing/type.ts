@@ -9,6 +9,9 @@ export enum Priority {
   priority = 'priority',
   topPriority = 'top-priority',
 }
+
+export type BasicPlan = Plan.sandbox | Plan.professional | Plan.team
+
 export type PlanInfo = {
   level: number
   price: number
@@ -20,9 +23,11 @@ export type PlanInfo = {
   vectorSpace: string
   documentsUploadQuota: number
   documentsRequestQuota: number
+  apiRateLimit: number
   documentProcessingPriority: Priority
   logHistory: number
   messageRequest: number
+  triggerEvents: number
   annotatedResponse: number
 }
 
@@ -48,7 +53,7 @@ export type SelfHostedPlanInfo = {
   annotatedResponse: number
 }
 
-export type UsagePlanInfo = Pick<PlanInfo, 'buildApps' | 'teamMembers' | 'annotatedResponse' | 'documentsUploadQuota'> & { vectorSpace: number }
+export type UsagePlanInfo = Pick<PlanInfo, 'buildApps' | 'teamMembers' | 'annotatedResponse' | 'documentsUploadQuota' | 'apiRateLimit' | 'triggerEvents'> & { vectorSpace: number }
 
 export enum DocumentProcessingPriority {
   standard = 'standard',
@@ -60,7 +65,7 @@ export type CurrentPlanInfoBackend = {
   billing: {
     enabled: boolean
     subscription: {
-      plan: Plan
+      plan: BasicPlan
     }
   }
   members: {
@@ -83,6 +88,14 @@ export type CurrentPlanInfoBackend = {
     size: number
     limit: number // total. 0 means unlimited
   }
+  api_rate_limit?: {
+    size: number
+    limit: number // total. 0 means unlimited
+  }
+  trigger_events?: {
+    size: number
+    limit: number // total. 0 means unlimited
+  }
   docs_processing: DocumentProcessingPriority
   can_replace_logo: boolean
   model_load_balancing_enabled: boolean
@@ -90,7 +103,16 @@ export type CurrentPlanInfoBackend = {
   education: {
     enabled: boolean
     activated: boolean
-  }
+  },
+  webapp_copyright_enabled: boolean
+  workspace_members: {
+    size: number
+    limit: number
+  },
+  is_allow_transfer_workspace: boolean
+  knowledge_pipeline: {
+    publish_enabled: boolean
+  },
 }
 
 export type SubscriptionItem = {

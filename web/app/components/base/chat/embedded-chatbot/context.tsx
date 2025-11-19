@@ -17,11 +17,9 @@ import type {
 import { noop } from 'lodash-es'
 
 export type EmbeddedChatbotContextValue = {
-  appInfoError?: any
-  appInfoLoading?: boolean
-  appMeta?: AppMeta
-  appData?: AppData
-  appParams?: ChatConfig
+  appMeta: AppMeta | null
+  appData: AppData | null
+  appParams: ChatConfig | null
   appChatListDataLoading?: boolean
   currentConversationId: string
   currentConversationItem?: ConversationItem
@@ -39,6 +37,7 @@ export type EmbeddedChatbotContextValue = {
   chatShouldReloadKey: string
   isMobile: boolean
   isInstalledApp: boolean
+  allowResetChat: boolean
   appId?: string
   handleFeedback: (messageId: string, feedback: Feedback) => void
   currentChatInstanceRef: RefObject<{ handleStop: () => void }>
@@ -49,9 +48,18 @@ export type EmbeddedChatbotContextValue = {
   setIsResponding: (state: boolean) => void,
   currentConversationInputs: Record<string, any> | null,
   setCurrentConversationInputs: (v: Record<string, any>) => void,
+  allInputsHidden: boolean
+  initUserVariables?: {
+    name?: string
+    avatar_url?: string
+  }
 }
 
 export const EmbeddedChatbotContext = createContext<EmbeddedChatbotContextValue>({
+  appData: null,
+  appMeta: null,
+  appParams: null,
+  appChatListDataLoading: false,
   currentConversationId: '',
   appPrevChatList: [],
   pinnedConversationList: [],
@@ -67,6 +75,7 @@ export const EmbeddedChatbotContext = createContext<EmbeddedChatbotContextValue>
   chatShouldReloadKey: '',
   isMobile: false,
   isInstalledApp: false,
+  allowResetChat: true,
   handleFeedback: noop,
   currentChatInstanceRef: { current: { handleStop: noop } },
   clearChatList: false,
@@ -75,5 +84,7 @@ export const EmbeddedChatbotContext = createContext<EmbeddedChatbotContextValue>
   setIsResponding: noop,
   currentConversationInputs: {},
   setCurrentConversationInputs: noop,
+  allInputsHidden: false,
+  initUserVariables: {},
 })
 export const useEmbeddedChatbotContext = () => useContext(EmbeddedChatbotContext)

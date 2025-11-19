@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import React from 'react'
 import { act, render, screen, waitFor } from '@testing-library/react'
 import Toast, { ToastProvider, useToastContext } from '.'
@@ -12,10 +13,10 @@ const TestComponent = () => {
 
   return (
     <div>
-      <button onClick={() => notify({ message: 'Notification message', type: 'info' })}>
+      <button type="button" onClick={() => notify({ message: 'Notification message', type: 'info' })}>
         Show Toast
       </button>
-      <button onClick={close}>Close Toast</button>
+      <button type="button" onClick={close}>Close Toast</button>
     </div>
   )
 }
@@ -80,7 +81,7 @@ describe('Toast', () => {
       const CustomToastContext = React.createContext({ notify: noop, close: undefined })
 
       // Create a wrapper component using the custom context
-      const Wrapper = ({ children }: any) => (
+      const Wrapper = ({ children }: { children: ReactNode }) => (
         <CustomToastContext.Provider value={{ notify: noop, close: undefined }}>
           {children}
         </CustomToastContext.Provider>

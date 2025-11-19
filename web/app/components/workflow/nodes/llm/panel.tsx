@@ -5,7 +5,6 @@ import MemoryConfig from '../_base/components/memory-config'
 import VarReferencePicker from '../_base/components/variable/var-reference-picker'
 import ConfigVision from '../_base/components/config-vision'
 import useConfig from './use-config'
-import { findVariableWhenOnLLMVision } from '../utils'
 import type { LLMNodeType } from './types'
 import ConfigPrompt from './components/config-prompt'
 import VarList from '@/app/components/workflow/nodes/_base/components/variable/var-list'
@@ -14,12 +13,15 @@ import Field from '@/app/components/workflow/nodes/_base/components/field'
 import Split from '@/app/components/workflow/nodes/_base/components/split'
 import ModelParameterModal from '@/app/components/header/account-setting/model-provider-page/model-parameter-modal'
 import OutputVars, { VarItem } from '@/app/components/workflow/nodes/_base/components/output-vars'
-import { InputVarType, type NodePanelProps } from '@/app/components/workflow/types'
-import BeforeRunForm from '@/app/components/workflow/nodes/_base/components/before-run-form'
-import type { Props as FormProps } from '@/app/components/workflow/nodes/_base/components/before-run-form/form'
-import ResultPanel from '@/app/components/workflow/run/result-panel'
+import type { NodePanelProps } from '@/app/components/workflow/types'
 import Tooltip from '@/app/components/base/tooltip'
 import Editor from '@/app/components/workflow/nodes/_base/components/prompt/editor'
+import StructureOutput from './components/structure-output'
+import ReasoningFormatConfig from './components/reasoning-format-config'
+import Switch from '@/app/components/base/switch'
+import { RiAlertFill, RiQuestionLine } from '@remixicon/react'
+import { fetchAndMergeValidCompletionParams } from '@/utils/completion-params'
+import Toast from '@/app/components/base/toast'
 
 const i18nPrefix = 'workflow.nodes.llm'
 
@@ -28,7 +30,6 @@ const Panel: FC<NodePanelProps<LLMNodeType>> = ({
   data,
 }) => {
   const { t } = useTranslation()
-
   const {
     readOnly,
     inputs,
@@ -55,96 +56,55 @@ const Panel: FC<NodePanelProps<LLMNodeType>> = ({
     handleMemoryChange,
     handleVisionResolutionEnabledChange,
     handleVisionResolutionChange,
-    isShowSingleRun,
-    hideSingleRun,
-    inputVarValues,
-    setInputVarValues,
-    visionFiles,
-    setVisionFiles,
-    contexts,
-    setContexts,
-    runningStatus,
-    handleRun,
-    handleStop,
-    varInputs,
-    runResult,
-    filterJinjia2InputVar,
+    isModelSupportStructuredOutput,
+    structuredOutputCollapsed,
+    setStructuredOutputCollapsed,
+    handleStructureOutputEnableChange,
+    handleStructureOutputChange,
+    filterJinja2InputVar,
+    handleReasoningFormatChange,
   } = useConfig(id, data)
 
   const model = inputs.model
-
-  const singleRunForms = (() => {
-    const forms: FormProps[] = []
-
-    if (varInputs.length > 0) {
-      forms.push(
-        {
-          label: t(`${i18nPrefix}.singleRun.variable`)!,
-          inputs: varInputs,
-          values: inputVarValues,
-          onChange: setInputVarValues,
-        },
-      )
-    }
-
-    if (inputs.context?.variable_selector && inputs.context?.variable_selector.length > 0) {
-      forms.push(
-        {
-          label: t(`${i18nPrefix}.context`)!,
-          inputs: [{
-            label: '',
-            variable: '#context#',
-            type: InputVarType.contexts,
-            required: false,
-          }],
-          values: { '#context#': contexts },
-          onChange: keyValue => setContexts((keyValue as any)['#context#']),
-        },
-      )
-    }
-
-    if (isVisionModel && data.vision?.enabled && data.vision?.configs?.variable_selector) {
-      const currentVariable = findVariableWhenOnLLMVision(data.vision.configs.variable_selector, availableVars)
-
-      forms.push(
-        {
-          label: t(`${i18nPrefix}.vision`)!,
-          inputs: [{
-            label: currentVariable?.variable as any,
-            variable: '#files#',
-            type: currentVariable?.formType as any,
-            required: false,
-          }],
-          values: { '#files#': visionFiles },
-          onChange: keyValue => setVisionFiles((keyValue as any)['#files#']),
-        },
-      )
-    }
-
-    return forms
-  })()
 
   const handleModelChange = useCallback((model: {
     provider: string
     modelId: string
     mode?: string
   }) => {
-    handleCompletionParamsChange({})
-    handleModelChanged(model)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
+    (async () => {
+      try {
+        const { params: filtered, removedDetails } = await fetchAndMergeValidCompletionParams(
+          model.provider,
+          model.modelId,
+          inputs.model.completion_params,
+          true,
+        )
+        const keys = Object.keys(removedDetails)
+        if (keys.length)
+          Toast.notify({ type: 'warning', message: `${t('common.modelProvider.parametersInvalidRemoved')}: ${keys.map(k => `${k} (${removedDetails[k]})`).join(', ')}` })
+        handleCompletionParamsChange(filtered)
+      }
+      catch {
+        Toast.notify({ type: 'error', message: t('common.error') })
+        handleCompletionParamsChange({})
+      }
+      finally {
+        handleModelChanged(model)
+      }
+    })()
+  }, [inputs.model.completion_params])
   return (
     <div className='mt-2'>
       <div className='space-y-4 px-4 pb-4'>
         <Field
           title={t(`${i18nPrefix}.model`)}
+          required
         >
           <ModelParameterModal
             popupClassName='!w-[387px]'
             isInWorkflow
             isAdvancedMode={true}
-            mode={model?.mode}
             provider={model?.provider}
             completionParams={model?.completion_params}
             modelId={model?.name}
@@ -181,7 +141,7 @@ const Panel: FC<NodePanelProps<LLMNodeType>> = ({
           <ConfigPrompt
             readOnly={readOnly}
             nodeId={id}
-            filterVar={filterInputVar}
+            filterVar={isShowVars ? filterJinja2InputVar : filterInputVar}
             isChatModel={isChatModel}
             isChatApp={isChatMode}
             isShowContext
@@ -207,7 +167,7 @@ const Panel: FC<NodePanelProps<LLMNodeType>> = ({
               list={inputs.prompt_config?.jinja2_variables || []}
               onChange={handleVarListChange}
               onVarNameChange={handleVarNameChange}
-              filterVar={filterJinjia2InputVar}
+              filterVar={filterJinja2InputVar}
               isSupportFileVar={false}
             />
           </Field>
@@ -280,29 +240,79 @@ const Panel: FC<NodePanelProps<LLMNodeType>> = ({
           config={inputs.vision?.configs}
           onConfigChange={handleVisionResolutionChange}
         />
+
+        {/* Reasoning Format */}
+        <ReasoningFormatConfig
+          // Default to tagged for backward compatibility
+          value={inputs.reasoning_format || 'tagged'}
+          onChange={handleReasoningFormatChange}
+          readonly={readOnly}
+        />
       </div>
       <Split />
-      <OutputVars>
+      <OutputVars
+        collapsed={structuredOutputCollapsed}
+        onCollapse={setStructuredOutputCollapsed}
+        operations={
+          <div className='mr-4 flex shrink-0 items-center'>
+            {(!isModelSupportStructuredOutput && !!inputs.structured_output_enabled) && (
+              <Tooltip noDecoration popupContent={
+                <div className='w-[232px] rounded-xl border-[0.5px] border-components-panel-border bg-components-tooltip-bg px-4 py-3.5 shadow-lg backdrop-blur-[5px]'>
+                  <div className='title-xs-semi-bold text-text-primary'>{t('app.structOutput.modelNotSupported')}</div>
+                  <div className='body-xs-regular mt-1 text-text-secondary'>{t('app.structOutput.modelNotSupportedTip')}</div>
+                </div>
+              }>
+                <div>
+                  <RiAlertFill className='mr-1 size-4 text-text-warning-secondary' />
+                </div>
+              </Tooltip>
+            )}
+            <div className='system-xs-medium-uppercase mr-0.5 text-text-tertiary'>{t('app.structOutput.structured')}</div>
+            <Tooltip popupContent={
+              <div className='max-w-[150px]'>{t('app.structOutput.structuredTip')}</div>
+            }>
+              <div>
+                <RiQuestionLine className='size-3.5 text-text-quaternary' />
+              </div>
+            </Tooltip>
+            <Switch
+              className='ml-2'
+              defaultValue={!!inputs.structured_output_enabled}
+              onChange={handleStructureOutputEnableChange}
+              size='md'
+              disabled={readOnly}
+            />
+          </div>
+        }
+      >
         <>
           <VarItem
             name='text'
             type='string'
             description={t(`${i18nPrefix}.outputVars.output`)}
           />
+          <VarItem
+            name='reasoning_content'
+            type='string'
+            description={t(`${i18nPrefix}.outputVars.reasoning_content`)}
+          />
+          <VarItem
+            name='usage'
+            type='object'
+            description={t(`${i18nPrefix}.outputVars.usage`)}
+          />
+          {inputs.structured_output_enabled && (
+            <>
+              <Split className='mt-3' />
+              <StructureOutput
+                className='mt-4'
+                value={inputs.structured_output}
+                onChange={handleStructureOutputChange}
+              />
+            </>
+          )}
         </>
       </OutputVars>
-      {isShowSingleRun && (
-        <BeforeRunForm
-          nodeName={inputs.title}
-          nodeType={inputs.type}
-          onHide={hideSingleRun}
-          forms={singleRunForms}
-          runningStatus={runningStatus}
-          onRun={handleRun}
-          onStop={handleStop}
-          result={<ResultPanel {...runResult} showSteps={false} />}
-        />
-      )}
     </div>
   )
 }

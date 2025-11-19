@@ -148,6 +148,7 @@ const format = (list: NodeTracing[], t: any, isPrint?: boolean): NodeTracing[] =
       return false
 
     const isParallelStartNode = node.parallelDetail?.isParallelStartNode
+
     if (!isParallelStartNode)
       return false
 
